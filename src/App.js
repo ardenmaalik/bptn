@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import { getAllPopularMovies } from './services/movies.service'
+import Router from './routes'
+import Header from './components/Header'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [data, setData] = useState([])
+    const [likedMovies, setLikedMovies] = useState([])
+    
+
+    const initData = async () => {
+        await getAllPopularMovies().then(({ data }) => {
+            setData(data.results)
+            console.log(data.results)
+        })
+    }
+
+    useEffect(() => {
+        initData()
+    }, [])
+
+    return (
+        <>
+            <Header/>
+            <Router data={data} likedMovies={likedMovies} setLikedMovies={setLikedMovies} />
+        </>
+  )
 }
 
-export default App;
+export default App
